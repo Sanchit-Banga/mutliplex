@@ -47,4 +47,13 @@ public class CustomExceptionHandling extends ResponseEntityExceptionHandler {
         response.setError("Unsupported Media Type");
         return new ResponseEntity<>(response, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
+
+    @ExceptionHandler(AlreadyPresentException.class)
+    public ResponseEntity<Object> handleExceptions(AlreadyPresentException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse(webRequest);
+        response.setMessage(exception.getMessage());
+        response.setStatus("500");
+        response.setError("Data already present in table");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
