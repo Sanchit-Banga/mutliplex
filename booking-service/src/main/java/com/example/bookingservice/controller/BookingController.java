@@ -32,7 +32,7 @@ public class BookingController {
         Map<String,String> map = Map.of("message",bookingService.add(booking));
         return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
-    @PutMapping("update/date/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<Map<String,String>> updateBookDate(@PathVariable("id") Long id,@RequestBody Booking booking)
     {
         Map<String,String> map = Map.of("message",bookingService.updateBookDate(booking,id));
