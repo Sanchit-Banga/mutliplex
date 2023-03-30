@@ -24,7 +24,7 @@ public class ShowController {
     public ResponseEntity<Map<String, String>> addShow(@RequestBody ShowRequestDto show) {
         String response = showService.addShow(show);
         Map<String, String> map = Map.of(MSG, response);
-        return ResponseEntity.ok(map);
+        return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 
     @PutMapping("/update/{id}")

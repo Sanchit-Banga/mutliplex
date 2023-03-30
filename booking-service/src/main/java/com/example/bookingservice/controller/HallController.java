@@ -22,7 +22,7 @@ public class HallController {
     public ResponseEntity<Map<String, String>> addHall(@RequestBody HallDtoRequest hallDto) {
         String response = hallService.addHall(hallDto);
         Map<String, String> map = Map.of(MSG, response);
-        return ResponseEntity.ok(map);
+        return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 
     @GetMapping("/get/{id}")

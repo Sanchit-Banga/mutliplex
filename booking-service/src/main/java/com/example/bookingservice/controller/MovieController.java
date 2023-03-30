@@ -25,7 +25,7 @@ public class MovieController {
     public ResponseEntity<Map<String, String>> addMovie(@RequestBody MovieDtoRequest moviedto) {
         String response = movieService.addMovie(moviedto);
         Map<String, String> map = Map.of(MSG, response);
-        return ResponseEntity.ok(map);
+        return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 
     @PutMapping("/update/{id}")
