@@ -19,34 +19,34 @@ public class MovieController {
     final
     MovieService movieService;
 
-    public static final String msg = "message";
+    public static final String MSG = "message";
 
     @PostMapping("/add")
-    public ResponseEntity<Map<String,String>> addMovie(@RequestBody MovieDtoRequest moviedto){
-        String response =movieService.addMovie(moviedto);
-        Map<String, String> map = Map.of(msg, response);
+    public ResponseEntity<Map<String, String>> addMovie(@RequestBody MovieDtoRequest moviedto) {
+        String response = movieService.addMovie(moviedto);
+        Map<String, String> map = Map.of(MSG, response);
         return ResponseEntity.ok(map);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Map<String,String>> updateMovie(@RequestBody MovieDtoRequest movieDtoRequest, @PathVariable("id") Long id){
-        Map<String, String> map = Map.of(msg, movieService.updateMovie(movieDtoRequest, id));
+    public ResponseEntity<Map<String, String>> updateMovie(@RequestBody MovieDtoRequest movieDtoRequest, @PathVariable("id") Long id) {
+        Map<String, String> map = Map.of(MSG, movieService.updateMovie(movieDtoRequest, id));
         return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 
     @GetMapping("/get/movie/{name}")
-    public ResponseEntity<MovieDtoResponse> getMovie(@PathVariable("name") String name){
+    public ResponseEntity<MovieDtoResponse> getMovie(@PathVariable("name") String name) {
         return ResponseEntity.ok(movieService.getMovie(name));
     }
 
     @GetMapping("/get/movies")
-    public ResponseEntity<List<Movie>> getAllMovies(){
+    public ResponseEntity<List<Movie>> getAllMovies() {
         return ResponseEntity.ok(movieService.getAllMovies());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Map<String ,String>> deleteMovie(@PathVariable("id") Long id){
-        Map<String,String> map = Map.of(msg,movieService.deleteMovie(id));
-        return new ResponseEntity<>(map,HttpStatusCode.valueOf(200));
+    public ResponseEntity<Map<String, String>> deleteMovie(@PathVariable("id") Long id) {
+        Map<String, String> map = Map.of(MSG, movieService.deleteMovie(id));
+        return new ResponseEntity<>(map, HttpStatusCode.valueOf(200));
     }
 }
