@@ -3,13 +3,12 @@ package com.example.bookingservice.controller;
 import com.example.bookingservice.model.Booking;
 import com.example.bookingservice.service.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/booking")
@@ -26,5 +25,23 @@ public class BookingController {
     public ResponseEntity<List<Booking>> getBookingAll()
     {
         return ResponseEntity.ok(bookingService.getBookingAll());
+    }
+    @PostMapping("/add")
+    public ResponseEntity<Map<String,String>> addBooking(@RequestBody Booking booking)
+    {
+        Map<String,String> map = Map.of("message",bookingService.add(booking));
+        return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
+    }
+    @PutMapping("update/date/{id}")
+    public ResponseEntity<Map<String,String>> updateBookDate(@PathVariable("id") Long id,@RequestBody Booking booking)
+    {
+        Map<String,String> map = Map.of("message",bookingService.updateBookDate(booking,id));
+        return new ResponseEntity<>(map,HttpStatusCode.valueOf(201));
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Map<String,String>> deleteBooking(@PathVariable("id") Long id)
+    {
+        Map<String,String> map = Map.of("message",bookingService.deleteBooking(id));
+        return new ResponseEntity<>(map,HttpStatusCode.valueOf(200));
     }
 }

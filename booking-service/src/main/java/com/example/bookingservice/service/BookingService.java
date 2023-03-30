@@ -21,4 +21,16 @@ public class BookingService {
     public List<Booking> getBookingAll() {
         return bookingRepository.findAll();
     }
+
+    public String add(Booking booking) {
+        return "added";
+    }
+
+    public String deleteBooking(Long id) {
+        return "deleted";
+    }
+
+    public String updateBookDate(Booking booking, Long id) {
+        return "updated";
+    }
 }
