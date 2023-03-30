@@ -1,6 +1,7 @@
 package com.example.bookingservice.controller;
 
-import com.example.bookingservice.dto.MovieDto;
+import com.example.bookingservice.dto.MovieDtoRequest;
+import com.example.bookingservice.dto.MovieDtoResponse;
 import com.example.bookingservice.model.Movie;
 import com.example.bookingservice.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -21,20 +22,20 @@ public class MovieController {
     public static final String msg = "message";
 
     @PostMapping("/add")
-    public ResponseEntity<Map<String,String>> addMovie(@RequestBody MovieDto moviedto){
+    public ResponseEntity<Map<String,String>> addMovie(@RequestBody MovieDtoRequest moviedto){
         String response =movieService.addMovie(moviedto);
         Map<String, String> map = Map.of(msg, response);
         return ResponseEntity.ok(map);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Map<String,String>> updateMovie(@RequestBody MovieDto movieDto,@PathVariable("id") Long id){
-        Map<String, String> map = Map.of(msg, movieService.updateMovie(movieDto, id));
+    public ResponseEntity<Map<String,String>> updateMovie(@RequestBody MovieDtoRequest movieDtoRequest, @PathVariable("id") Long id){
+        Map<String, String> map = Map.of(msg, movieService.updateMovie(movieDtoRequest, id));
         return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 
     @GetMapping("/get/movie/{name}")
-    public ResponseEntity<MovieDto> getMovie(@PathVariable("name") String name){
+    public ResponseEntity<MovieDtoResponse> getMovie(@PathVariable("name") String name){
         return ResponseEntity.ok(movieService.getMovie(name));
     }
 

@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieDto {
-    private Long id;
+public class MovieDtoRequest {
     private String name;
 }

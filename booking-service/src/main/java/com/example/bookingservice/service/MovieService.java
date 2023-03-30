@@ -1,6 +1,7 @@
 package com.example.bookingservice.service;
 
-import com.example.bookingservice.dto.MovieDto;
+import com.example.bookingservice.dto.MovieDtoRequest;
+import com.example.bookingservice.dto.MovieDtoResponse;
 import com.example.bookingservice.exceptions.AlreadyPresentException;
 import com.example.bookingservice.exceptions.ConstraintViolationException;
 import com.example.bookingservice.model.Movie;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MovieService {
     final MovieRepository movieRepository;
 
-    public String addMovie(MovieDto moviedto) {
+    public String addMovie(MovieDtoRequest moviedto) {
         try{
             if(movieRepository.findByName(moviedto.getName())!=null){
                 throw new AlreadyPresentException("Movie already exists");
@@ -33,12 +34,12 @@ public class MovieService {
     }
 
 
-    public String updateMovie(MovieDto movieDto, Long id) {
+    public String updateMovie(MovieDtoRequest movieDtoRequest, Long id) {
         return "Movie updated successfully";
     }
 
-    public MovieDto getMovie(String name) {
-        MovieDto dto = new MovieDto();
+    public MovieDtoResponse getMovie(String name) {
+        MovieDtoResponse dto = new MovieDtoResponse();
         return dto;
     }
 

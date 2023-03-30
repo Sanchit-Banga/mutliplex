@@ -14,8 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HallDto {
-    private Long id;
+public class HallDtoRequest {
     private HallType hallType;
     private Long totalCapacity;
     private List<Show> shows = new ArrayList<>();
