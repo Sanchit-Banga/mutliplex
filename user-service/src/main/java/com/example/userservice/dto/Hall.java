@@ -15,9 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 
 public class Hall {
-        private Long hallId;
-        private String hallDescription;
-        private int totalCapacity;
-        private List<Shows> shows = new ArrayList<>();
+    private Long hallId;
+    private String hallDescription;
+    private int totalCapacity;
+    private List<Shows> shows = new ArrayList<>();
 
-    }
+}

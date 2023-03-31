@@ -16,9 +16,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/show")
 public class ShowController {
-    final ShowService showService;
-
     public static final String MSG = "message";
+    private final ShowService showService;
 
     @PostMapping("/add")
     public ResponseEntity<Map<String, String>> addShow(@RequestBody ShowRequestDto show) {
