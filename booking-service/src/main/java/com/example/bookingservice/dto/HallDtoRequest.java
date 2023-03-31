@@ -16,6 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class HallDtoRequest {
     private HallType hallType;
-    private Long totalCapacity;
+    private Integer totalCapacity;
     private List<Show> shows = new ArrayList<>();
 }

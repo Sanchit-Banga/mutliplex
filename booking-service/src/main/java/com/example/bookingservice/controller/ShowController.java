@@ -2,7 +2,6 @@ package com.example.bookingservice.controller;
 
 import com.example.bookingservice.dto.ShowRequestDto;
 import com.example.bookingservice.dto.ShowResponseDto;
-import com.example.bookingservice.model.Show;
 import com.example.bookingservice.service.ShowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -15,10 +14,10 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/show")
-public class ShowController {
-    final ShowService showService;
 
+public class ShowController {
     public static final String MSG = "message";
+    private final ShowService showService;
 
     @PostMapping("/add")
     public ResponseEntity<Map<String, String>> addShow(@RequestBody ShowRequestDto show) {

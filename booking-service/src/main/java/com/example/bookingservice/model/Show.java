@@ -16,6 +16,7 @@ import java.util.Date;
 @Table(name = "shows")
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Show {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

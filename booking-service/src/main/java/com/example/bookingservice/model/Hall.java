@@ -23,9 +23,10 @@ public class Hall {
     private Long id;
     @Enumerated(EnumType.STRING)
     private HallType hallType;
-    private Long totalCapacity;
+    private Integer totalCapacity;
     @ElementCollection
     private List<Show> shows = new ArrayList<>();
-    @ElementCollection
-    private List<Seat> seats = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "hall_id")
+    private List<Seat> seats;
 }
