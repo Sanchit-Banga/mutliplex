@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import java.util.List;
 
 @Transactional
@@ -20,12 +21,12 @@ import java.util.List;
 public class MovieService {
     final MovieRepository movieRepository;
 
-    public static final String INCORRECTINPUT="Input incorrect";
-    public static final String INCORRECTDATATYPE="Incorrect datatype";
+    public static final String INCORRECTINPUT = "Input incorrect";
+    public static final String INCORRECTDATATYPE = "Incorrect datatype";
 
     public String addMovie(MovieDtoRequest moviedto) {
-        try{
-            if(movieRepository.findByName(moviedto.getName())!=null){
+        try {
+            if (movieRepository.findByName(moviedto.getName()) != null) {
                 throw new AlreadyPresentException("Movie already exists");
             }
             Movie movie = Movie.builder()
@@ -33,7 +34,7 @@ public class MovieService {
                     .build();
             movieRepository.save(movie);
             return "Movie added successfully";
-        } catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException(INCORRECTINPUT);
         }
     }
@@ -41,22 +42,20 @@ public class MovieService {
 
     public String updateMovie(MovieDtoRequest movieDtoRequest, Long id) {
 
-        try{
+        try {
             Movie movie = movieRepository.findByName(movieDtoRequest.getName());
-            if(movie!=null){
+            if (movie != null) {
                 throw new AlreadyPresentException("Movie already present");
             }
-            movie = movieRepository.findById(id).orElseThrow(()->new NotFoundException("Movie not found"));
-            if(movie.getName().equals(movieDtoRequest.getName())){
+            movie = movieRepository.findById(id).orElseThrow(() -> new NotFoundException("Movie not found"));
+            if (movie.getName().equals(movieDtoRequest.getName())) {
                 throw new AlreadyPresentException("Movie already exists");
             }
             movie.setName(movieDtoRequest.getName());
             movieRepository.save(movie);
-        }
-        catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException(INCORRECTINPUT);
-        }
-        catch (MethodArgumentTypeMismatchException e){
+        } catch (MethodArgumentTypeMismatchException e) {
             throw new BadRequestException(INCORRECTDATATYPE);
         }
         return "Movie updated successfully";
@@ -85,14 +84,12 @@ public class MovieService {
     }
 
     public String deleteMovie(Long id) {
-        try{
-            Movie movie = movieRepository.findById(id).orElseThrow(()->new NotFoundException("Movie not found"));
+        try {
+            Movie movie = movieRepository.findById(id).orElseThrow(() -> new NotFoundException("Movie not found"));
             movieRepository.deleteById(movie.getId());
-        }
-        catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException(INCORRECTINPUT);
-        }
-        catch (MethodArgumentTypeMismatchException e){
+        } catch (MethodArgumentTypeMismatchException e) {
             throw new BadRequestException(INCORRECTDATATYPE);
         }
         return "Movie deleted successfully";

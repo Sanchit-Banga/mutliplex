@@ -1,27 +1,40 @@
 package com.example.bookingservice.service;
 
+import com.example.bookingservice.exceptions.BadRequestException;
+import com.example.bookingservice.model.Hall;
 import com.example.bookingservice.model.Seat;
-import com.example.bookingservice.repository.SeatRepository;
+import com.example.bookingservice.repository.HallRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SeatService {
-    final SeatRepository seatRepository;
-    public String add(Seat s) {
-        seatRepository.save(s);
-        return "Seat added successfully";
-    }
-    public List<Seat> getAllSeat() {
-        return seatRepository.findAll();
+    private final HallRepository hallRepository;
+
+    public int getAvailableSeats(Long id) {
+        try {
+            Hall hall = hallRepository.findById(id).orElseThrow(() -> new BadRequestException("No such hall found"));
+            List<Seat> seats = hall.getSeats();
+            int availableSeats = 0;
+            availableSeats = (int) seats.stream().filter(seat -> !seat.getIsBooked()).count();
+            return availableSeats;
+        } catch (Exception e) {
+            throw new BadRequestException("No such hall found");
+        }
     }
 
-    public Seat get(Long id) {
-        Optional<Seat> obj =seatRepository.findById(id);
-        return obj.get();
+    public void deleteSeat(Long id) {
+        try {
+            Hall hall = hallRepository.findById(id).orElseThrow(() -> new BadRequestException("No such hall found"));
+            List<Seat> seats = hall.getSeats();
+            seats.remove(seats.size() - 1);
+            hall.setSeats(seats);
+            hallRepository.save(hall);
+        } catch (Exception e) {
+            throw new BadRequestException("No such hall found");
+        }
     }
 }
