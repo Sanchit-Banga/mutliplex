@@ -23,7 +23,7 @@ public class BookingService {
     }
 
     public String add(Booking booking) {
-
+        bookingRepository.save(booking);
         return "added";
     }
 
