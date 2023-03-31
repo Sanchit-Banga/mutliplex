@@ -1,7 +1,5 @@
 package com.example.bookingservice.dto;
 
-import com.example.bookingservice.model.Hall;
-import com.example.bookingservice.model.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
