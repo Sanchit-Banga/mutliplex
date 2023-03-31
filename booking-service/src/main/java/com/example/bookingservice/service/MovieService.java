@@ -19,8 +19,8 @@ public class MovieService {
     final MovieRepository movieRepository;
 
     public String addMovie(MovieDtoRequest moviedto) {
-        try{
-            if(movieRepository.findByName(moviedto.getName())!=null){
+        try {
+            if (movieRepository.findByName(moviedto.getName()) != null) {
                 throw new AlreadyPresentException("Movie already exists");
             }
             Movie movie = Movie.builder()
@@ -28,7 +28,7 @@ public class MovieService {
                     .build();
             movieRepository.save(movie);
             return "Movie added successfully";
-        } catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException("Input incorrect");
         }
     }
