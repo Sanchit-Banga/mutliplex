@@ -37,10 +37,10 @@ public class ShowService {
         return (fromDate.after(toDate));
     }
 
-    public boolean hallSlotValidate(Long hallId, Integer slotNo) {
+    public boolean hallSlotValidate(Long hallId, Integer slotNo,Date fromDate,Date toDate) {
         //returns true if there is already hall booked on that slot no
         Hall hall = hallRepository.findById(hallId).orElseThrow(() -> new BadRequestException(NOHALL));
-        Show show = showRepository.hallSlotValidate(hall, slotNo);
+        Show show = showRepository.hallSlotValidate(hall, slotNo,fromDate, toDate);
         return show != null;
     }
 
@@ -51,7 +51,7 @@ public class ShowService {
             if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
                 return "From date cannot be after To Date";
             }
-            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber())) {
+            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(),showRequestDto.getFromDate(),showRequestDto.getToDate())) {
                 return "Show already present at this slot no";
             }
 
@@ -80,7 +80,7 @@ public class ShowService {
             if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
                 return "From date cannot be after To Date";
             }
-            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber())) {
+            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(),showRequestDto.getFromDate(),showRequestDto.getToDate())) {
                 return "Show already present at this slot no";
             }
 
