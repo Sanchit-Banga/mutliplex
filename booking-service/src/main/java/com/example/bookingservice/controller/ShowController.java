@@ -38,8 +38,8 @@ public class ShowController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ShowResponseDto> getShow() {
-        return ResponseEntity.ok(showService.getShow());
+    public ResponseEntity<ShowResponseDto> getShow(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(showService.getShow(id));
     }
 
     @DeleteMapping("/delete/{id}")
