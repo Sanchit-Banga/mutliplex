@@ -12,8 +12,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShowRequestDto {
-    private MovieDtoRequest movie;
-    private HallDtoRequest hall;
+    private Long movieId;
+    private Long hallId;
     private Date fromDate;
     private Date toDate;
     private Integer slotNumber;

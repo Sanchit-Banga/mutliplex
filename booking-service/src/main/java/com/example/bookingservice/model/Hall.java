@@ -4,6 +4,7 @@ package com.example.bookingservice.model;
 import com.example.bookingservice.utils.HallType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Hall {
     private HallType hallType;
     private Integer totalCapacity;
     @ElementCollection
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private List<Show> shows = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "hall_id")
