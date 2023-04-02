@@ -77,12 +77,12 @@ public class ShowService {
 
     public String updateShow(ShowRequestDto showRequestDto, Long showId) {
         try {
-            if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
-                return "From date cannot be after To Date";
-            }
-            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(), showRequestDto.getFromDate(), showRequestDto.getToDate())) {
-                return "Show already present at this slot no";
-            }
+//            if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
+//                return "From date cannot be after To Date";
+//            }
+//            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(), showRequestDto.getFromDate(), showRequestDto.getToDate())) {
+//                return "Show already present at this slot no";
+//            }
 
             Show show = showRepository.findById(showId).orElseThrow(() -> new NotFoundException(NOSHOW));
 

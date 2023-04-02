@@ -24,7 +24,7 @@ public class Hall {
     @Enumerated(EnumType.STRING)
     private HallType hallType;
     private Integer totalCapacity;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "hall_id")
     @JsonManagedReference
     private List<Show> show;
