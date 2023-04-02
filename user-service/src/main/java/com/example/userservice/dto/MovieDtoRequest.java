@@ -5,12 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class MoviesDto {
-    private String movieName;
-    private String movieId;
+public class MovieDtoRequest {
+    private String name;
 }

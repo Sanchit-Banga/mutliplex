@@ -1,6 +1,8 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.Shows;
+import com.example.userservice.dto.HallDtoResponse;
+import com.example.userservice.dto.MovieDtoResponse;
+import com.example.userservice.dto.ShowResponseDto;
 import com.example.userservice.dto.UserRequest;
 import com.example.userservice.exceptions.AuthException;
 import com.example.userservice.exceptions.NotFoundException;
@@ -82,20 +84,4 @@ public class UserService {
         return "User updated successfully";
     }
 
-    public List<Shows> getAllShows() {
-        List<Shows> response;
-        try {
-            response = webClientBuilder.build().get()
-                    .uri("http://localhost:8081/shows/getallshows")
-                    .retrieve()
-                    .bodyToFlux(Shows.class)
-                    .collectList()
-                    .block();
-            log.info("Response from '/api/v1/users/getAllShows': {}", response);
-        } catch (Exception e) {
-            log.error("Error while getting all shows: {}", e.getMessage());
-            return Collections.emptyList();
-        }
-        return response;
-    }
 }

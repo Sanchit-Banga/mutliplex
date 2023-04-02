@@ -1,8 +1,8 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.Hall;
-import com.example.userservice.dto.MoviesDto;
-import com.example.userservice.dto.Shows;
+import com.example.userservice.dto.HallDtoResponse;
+import com.example.userservice.dto.MovieDtoResponse;
+import com.example.userservice.dto.ShowResponseDto;
 import com.example.userservice.dto.UserRequest;
 import com.example.userservice.model.User;
 import com.example.userservice.service.AdminService;
@@ -41,36 +41,36 @@ public class UserController {
         return ResponseEntity.ok(UtilityFunctions.generateJWTToken(user));
     }
 
-    @GetMapping("/get-all-shows")
-    ResponseEntity<List<Shows>> getAllShows() {
-        return ResponseEntity.ok(userService.getAllShows());
-    }
-
-    @GetMapping("/get-all-movies")
-    public ResponseEntity<List<MoviesDto>> getAllMovies() {
+    @GetMapping("/get/movie")
+    public ResponseEntity<List<MovieDtoResponse>> getAllMovies() {
         return ResponseEntity.ok(adminService.getAllMovies());
     }
 
-    @GetMapping("/get-movie-by-id/{id}")
-    public ResponseEntity<Map<String, String>> getMovieById(@PathVariable("id") Long id) {
-        String response = adminService.getMovieById(id);
-        Map<String, String> map = Map.of("message", response);
-        return ResponseEntity.ok(map);
-    }
 
-    @GetMapping("/get-movie-by-name/{name}")
-    public ResponseEntity<List<MoviesDto>> getMovieByName(@PathVariable("name") String name) {
+    @GetMapping("/get/movie/name/{name}")
+    public ResponseEntity<MovieDtoResponse> getMovieByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(adminService.getMovieByName(name));
     }
 
-    @GetMapping("/get-all-halls")
-    public ResponseEntity<List<Hall>> getAllHalls() {
+    @GetMapping("/get/hall")
+    public ResponseEntity<List<HallDtoResponse>> getAllHalls() {
         return ResponseEntity.ok(adminService.getAllHalls());
     }
 
-    @GetMapping("/get-hall-by-id/{id}")
-    public ResponseEntity<Hall> getHallById(@PathVariable("id") Long id) {
-        Hall response = adminService.getHallById(id);
+    @GetMapping("/get/hall/{id}")
+    public ResponseEntity<HallDtoResponse> getHallById(@PathVariable("id") Long id) {
+        HallDtoResponse response = adminService.getHallById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get/show")
+    public ResponseEntity<List<ShowResponseDto>> getAllShows() {
+        return ResponseEntity.ok(adminService.getAllShows());
+    }
+
+    @GetMapping("/get/show/{id}")
+    public ResponseEntity<ShowResponseDto> getShowById(@PathVariable("id") Long id) {
+        ShowResponseDto response = adminService.getShowById(id);
         return ResponseEntity.ok(response);
     }
 }

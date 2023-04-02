@@ -32,7 +32,7 @@ public class ShowController {
         return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 
-    @GetMapping("/get/all")
+    @GetMapping("/get")
     public ResponseEntity<List<ShowResponseDto>> getShows() {
         return ResponseEntity.ok(showService.getAllShows());
     }

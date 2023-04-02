@@ -1,22 +1,17 @@
 package com.example.userservice.dto;
 
-import com.example.userservice.model.Show;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-
-public class Booking {
-
-    private long bookingId;
-    private Show shows;
+@NoArgsConstructor
+public class BookingRequestDto {
+    private Long showId;
     private Date bookedDate;
     private Date showDate;
+
 }

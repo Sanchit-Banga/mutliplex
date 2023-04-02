@@ -1,6 +1,8 @@
 package com.example.userservice.dto;
 
 
+import com.example.userservice.model.Show;
+import com.example.userservice.utils.HallType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +15,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class Hall {
-    private Long hallId;
-    private String hallDescription;
-    private int totalCapacity;
-    private List<Shows> shows = new ArrayList<>();
-
+public class HallDtoRequest {
+    private HallType hallType;
+    private Integer totalCapacity;
+    private List<Show> shows = new ArrayList<>();
 }
