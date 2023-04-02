@@ -2,7 +2,6 @@ package com.example.bookingservice.service;
 
 import com.example.bookingservice.dto.BookingDto;
 import com.example.bookingservice.dto.BookingRequestDto;
-import com.example.bookingservice.exceptions.AlreadyPresentException;
 import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.exceptions.ConstraintViolationException;
 import com.example.bookingservice.exceptions.NotFoundException;
@@ -14,11 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import java.awt.print.Book;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +44,7 @@ public class BookingService {
 
     public String add(BookingRequestDto booking) {
         try {
-            Show show = showRepository.findById(booking.getShowId()).orElse(null);
+            Show show = showRepository.findById(booking.getShowId()).orElse((null));
             if (show == null) {
                 throw new NotFoundException("Show not found");
             }
@@ -84,7 +80,6 @@ public class BookingService {
         return BookingDto.builder()
                 .id(booking.getId())
                 .bookedDate(booking.getBookedDate())
-                .bookingUuid(booking.getBookingUuid())
                 .showDate(booking.getShowDate())
                 .show(booking.getShow())
                 .build();
