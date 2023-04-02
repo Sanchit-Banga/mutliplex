@@ -2,11 +2,11 @@ package com.example.bookingservice.model;
 
 
 import com.example.bookingservice.utils.HallType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 
@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@ToString
 @Table(name = "hall")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,10 +24,11 @@ public class Hall {
     @Enumerated(EnumType.STRING)
     private HallType hallType;
     private Integer totalCapacity;
-    @ElementCollection
-    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
-    private List<Show> shows = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "hall_id")
+    @JsonManagedReference
+    private List<Show> show;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "hall_id")
     private List<Seat> seats;
 }
