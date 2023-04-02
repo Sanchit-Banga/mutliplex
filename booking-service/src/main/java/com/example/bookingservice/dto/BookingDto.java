@@ -16,5 +16,4 @@ public class BookingDto {
     private Show show;
     private Date bookedDate;
     private Date showDate;
-    private UUID bookingUuid;
 }

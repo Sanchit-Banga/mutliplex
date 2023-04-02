@@ -2,6 +2,7 @@ package com.example.bookingservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,9 +19,9 @@ public class BookingDetail {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id")
     private Booking booking;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "seat_id")
-    private Seat seat;
+    private List<Seat> seat;
     private Integer numberOfSeats;
 
 }
