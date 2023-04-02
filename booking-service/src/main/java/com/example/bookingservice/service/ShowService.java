@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
 import java.util.Date;
 import java.util.List;
 
@@ -36,10 +35,10 @@ public class ShowService {
         return (fromDate.after(toDate));
     }
 
-    public boolean hallSlotValidate(Long hallId, Integer slotNo) {
-        // returns true if there is already hall booked on that slot no
+    public boolean hallSlotValidate(Long hallId, Integer slotNo, Date fromDate, Date toDate) {
+        //returns true if there is already hall booked on that slot no
         Hall hall = hallRepository.findById(hallId).orElseThrow(() -> new BadRequestException(NOHALL));
-        Show show = showRepository.hallSlotValidate(hall, slotNo);
+        Show show = showRepository.hallSlotValidate(hall, slotNo, fromDate, toDate);
         return show != null;
     }
 
@@ -50,7 +49,7 @@ public class ShowService {
             if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
                 return "From date cannot be after To Date";
             }
-            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber())) {
+            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(), showRequestDto.getFromDate(), showRequestDto.getToDate())) {
                 return "Show already present at this slot no";
             }
 
@@ -78,12 +77,12 @@ public class ShowService {
 
     public String updateShow(ShowRequestDto showRequestDto, Long showId) {
         try {
-            if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
-                return "From date cannot be after To Date";
-            }
-            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber())) {
-                return "Show already present at this slot no";
-            }
+//            if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
+//                return "From date cannot be after To Date";
+//            }
+//            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(), showRequestDto.getFromDate(), showRequestDto.getToDate())) {
+//                return "Show already present at this slot no";
+//            }
 
             Show show = showRepository.findById(showId).orElseThrow(() -> new NotFoundException(NOSHOW));
 

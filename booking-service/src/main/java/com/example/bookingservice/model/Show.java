@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -23,11 +25,11 @@ public class Show {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne//(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "hall_id")
     @JsonBackReference
     private Hall hall;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne//(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "movie_id")
     private Movie movie;
     @Temporal(TemporalType.DATE)
