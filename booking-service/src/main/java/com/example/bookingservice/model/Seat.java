@@ -8,7 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@ToString
 @Embeddable
 @Table(name = "seat")
 @AllArgsConstructor
@@ -23,4 +22,7 @@ public class Seat {
     private Boolean isBooked;
     @Enumerated(EnumType.STRING)
     private SeatType seatType;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_id")
+//    private User user;
 }

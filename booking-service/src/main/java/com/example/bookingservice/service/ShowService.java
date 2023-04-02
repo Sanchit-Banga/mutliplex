@@ -24,15 +24,14 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ShowService {
+    public static final String NOHALL = "No Hall Found";
+    public static final String NOSHOW = "No Show Found";
     private final ShowRepository showRepository;
     private final MovieRepository movieRepository;
     private final HallRepository hallRepository;
 
-    public static final String NOHALL = "No Hall Found";
-    public static final String NOSHOW = "No Show Found";
-
     public boolean dateValidate(Date fromDate, Date toDate) {
-        //returns true if fromDate is after toDate
+        // returns true if fromDate is after toDate
         return (fromDate.after(toDate));
     }
 
@@ -54,19 +53,21 @@ public class ShowService {
                 return "Show already present at this slot no";
             }
 
-            Hall hall = hallRepository.findById(showRequestDto.getHallId()).orElseThrow(() -> new BadRequestException(NOHALL));
-            Movie movie = movieRepository.findById(showRequestDto.getMovieId()).orElseThrow(() -> new BadRequestException("No movie found"));
+            Hall hall = hallRepository.findById(showRequestDto.getHallId())
+                    .orElseThrow(()
+                            -> new BadRequestException(NOHALL));
+            Movie movie = movieRepository.findById(showRequestDto.getMovieId())
+                    .orElseThrow(() ->
+                            new BadRequestException("No movie found"));
 
             Show show = Show.builder()
                     .movie(movie)
-                    .hall(hall)
                     .fromDate(showRequestDto.getFromDate())
                     .toDate(showRequestDto.getToDate())
+                    .hall(hall)
                     .slotNumber(showRequestDto.getSlotNumber())
                     .build();
-
             showRepository.save(show);
-
         } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException("Wrong input");
         }
@@ -152,4 +153,5 @@ public class ShowService {
         showRepository.deleteById(show.getId());
         return "Show deleted successfully";
     }
+
 }

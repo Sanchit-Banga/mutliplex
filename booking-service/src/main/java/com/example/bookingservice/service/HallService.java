@@ -6,7 +6,9 @@ import com.example.bookingservice.dto.HallDtoResponse;
 import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.model.Hall;
 import com.example.bookingservice.model.Seat;
+import com.example.bookingservice.model.Show;
 import com.example.bookingservice.repository.HallRepository;
+import com.example.bookingservice.repository.ShowRepository;
 import com.example.bookingservice.utils.SeatType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class HallService {
+    private final ShowRepository showRepository;
     private final HallRepository hallRepository;
     private final SeatService seatService;
 
@@ -31,7 +34,7 @@ public class HallService {
             Hall hall = Hall.builder()
                     .hallType(hallDto.getHallType())
                     .totalCapacity(hallDto.getTotalCapacity())
-                    .shows(hallDto.getShows())
+//                    .shows(hallDto.getShows())
                     .build();
             addSeatToHall(hall);
             hallRepository.save(hall);
@@ -134,6 +137,15 @@ public class HallService {
         }
     }
 
+    public List<Show> getAllShowsInAHall(Hall hall) {
+        try {
+            return showRepository.getAllShowsByHallId(hall.getId());
+
+        } catch (Exception e) {
+            throw new BadRequestException("No such hall exists");
+        }
+    }
+
     // logic for adding seats to hall
     private void addSeatToHall(Hall hall) {
         Seat s = null;
@@ -158,7 +170,7 @@ public class HallService {
                 .id(hall.getId())
                 .hallType(hall.getHallType())
                 .totalCapacity(hall.getTotalCapacity())
-                .shows(hall.getShows())
+                .shows(getAllShowsInAHall(hall))
                 .build();
     }
 

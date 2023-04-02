@@ -33,12 +33,12 @@ public class MovieController {
         return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 
-    @GetMapping("/get/movie/{name}")
+    @GetMapping("/get/{name}")
     public ResponseEntity<MovieDtoResponse> getMovie(@PathVariable("name") String name) {
         return ResponseEntity.ok(movieService.getMovie(name));
     }
 
-    @GetMapping("/get/movies")
+    @GetMapping("/get")
     public ResponseEntity<List<Movie>> getAllMovies() {
         return ResponseEntity.ok(movieService.getAllMovies());
     }

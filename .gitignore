@@ -19,6 +19,8 @@ application.properties
 *.iws
 *.iml
 *.ipr
+./booking-service/src/main/resources/application.properties
+./user-service/src/main/resources/application.properties
 
 ### NetBeans ###
 /nbproject/private/
