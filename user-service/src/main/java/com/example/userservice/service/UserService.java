@@ -1,8 +1,5 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.HallDtoResponse;
-import com.example.userservice.dto.MovieDtoResponse;
-import com.example.userservice.dto.ShowResponseDto;
 import com.example.userservice.dto.UserRequest;
 import com.example.userservice.exceptions.AuthException;
 import com.example.userservice.exceptions.NotFoundException;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

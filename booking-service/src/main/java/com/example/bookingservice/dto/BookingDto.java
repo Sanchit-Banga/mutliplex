@@ -4,7 +4,6 @@ import com.example.bookingservice.model.Show;
 import lombok.*;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Getter
 @Setter

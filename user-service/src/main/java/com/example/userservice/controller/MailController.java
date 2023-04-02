@@ -2,12 +2,10 @@ package com.example.userservice.controller;
 import com.example.userservice.model.User;
 import com.example.userservice.service.MailService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mail")
-@Slf4j
 @RequiredArgsConstructor
 public class MailController {
     private final MailService mailService;
