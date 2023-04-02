@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -53,12 +54,8 @@ public class ShowService {
                 return "Show already present at this slot no";
             }
 
-            Hall hall = hallRepository.findById(showRequestDto.getHallId())
-                    .orElseThrow(()
-                            -> new BadRequestException(NOHALL));
-            Movie movie = movieRepository.findById(showRequestDto.getMovieId())
-                    .orElseThrow(() ->
-                            new BadRequestException("No movie found"));
+            Hall hall = hallRepository.findById(showRequestDto.getHallId()).orElseThrow(() -> new BadRequestException(NOHALL));
+            Movie movie = movieRepository.findById(showRequestDto.getMovieId()).orElseThrow(() -> new BadRequestException("No movie found"));
 
             Show show = Show.builder()
                     .movie(movie)
@@ -77,12 +74,6 @@ public class ShowService {
 
     public String updateShow(ShowRequestDto showRequestDto, Long showId) {
         try {
-//            if (dateValidate(showRequestDto.getFromDate(), showRequestDto.getToDate())) {
-//                return "From date cannot be after To Date";
-//            }
-//            if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(), showRequestDto.getFromDate(), showRequestDto.getToDate())) {
-//                return "Show already present at this slot no";
-//            }
 
             Show show = showRepository.findById(showId).orElseThrow(() -> new NotFoundException(NOSHOW));
 
@@ -117,14 +108,7 @@ public class ShowService {
     }
 
     private ShowResponseDto convertToDto(Show show) {
-        return ShowResponseDto.builder()
-                .id(show.getId())
-                .toDate(show.getToDate())
-                .fromDate(show.getFromDate())
-                .slotNumber(show.getSlotNumber())
-                .movie(show.getMovie())
-                .hall(show.getHall())
-                .build();
+        return ShowResponseDto.builder().id(show.getId()).toDate(show.getToDate()).fromDate(show.getFromDate()).slotNumber(show.getSlotNumber()).movie(show.getMovie()).hall(show.getHall()).build();
     }
 
 

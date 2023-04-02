@@ -10,8 +10,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingRequestDto {
-        private Long showId;
-        private Date bookedDate;
-        private Date showDate;
+    private Long showId;
+    private Date bookedDate;
+    private Date showDate;
 
 }

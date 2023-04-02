@@ -34,7 +34,6 @@ public class HallService {
             Hall hall = Hall.builder()
                     .hallType(hallDto.getHallType())
                     .totalCapacity(hallDto.getTotalCapacity())
-//                    .shows(hallDto.getShows())
                     .build();
             addSeatToHall(hall);
             hallRepository.save(hall);

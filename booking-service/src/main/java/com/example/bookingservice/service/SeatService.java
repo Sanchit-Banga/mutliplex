@@ -6,10 +6,12 @@ import com.example.bookingservice.model.Seat;
 import com.example.bookingservice.repository.HallRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class SeatService {
     private final HallRepository hallRepository;
