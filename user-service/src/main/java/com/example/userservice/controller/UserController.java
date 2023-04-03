@@ -1,9 +1,6 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.HallDtoResponse;
-import com.example.userservice.dto.MovieDtoResponse;
-import com.example.userservice.dto.ShowResponseDto;
-import com.example.userservice.dto.UserRequest;
+import com.example.userservice.dto.*;
 import com.example.userservice.model.User;
 import com.example.userservice.service.AdminService;
 import com.example.userservice.service.UserService;
@@ -24,7 +21,7 @@ public class UserController {
     private final AdminService adminService;
 
     @PostMapping("/register")
-    ResponseEntity<Map<String, String>> registerUser(@RequestBody UserRequest userRequest) {
+    ResponseEntity<Map<String, String>> registerUser(@RequestBody User userRequest) {
         User userNew = userService.registerUser(userRequest);
         return new ResponseEntity<>(UtilityFunctions.generateJWTToken(userNew), HttpStatusCode.valueOf(201));
     }
@@ -37,8 +34,8 @@ public class UserController {
 
     @PostMapping("/login")
     ResponseEntity<Map<String, String>> loginUser(@RequestBody User user) {
-        userService.loginUser(user.getEmail(), user.getPassword());
-        return ResponseEntity.ok(UtilityFunctions.generateJWTToken(user));
+        Map<String, String> map = userService.loginUser(user.getEmail(), user.getPassword());
+        return ResponseEntity.ok(map);
     }
 
     @GetMapping("/get/movie")
@@ -72,5 +69,11 @@ public class UserController {
     public ResponseEntity<ShowResponseDto> getShowById(@PathVariable("id") Long id) {
         ShowResponseDto response = adminService.getShowById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/booking/add")
+    public ResponseEntity<Map<String, String>> addBooking(@RequestBody BookingRequestDto booking) {
+        Map<String, String> map = Map.of("message", userService.addBooking(booking));
+        return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
     }
 }

@@ -2,6 +2,7 @@ package com.example.bookingservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -16,12 +17,11 @@ public class BookingDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "booking_detail_id")
+    private List<Seat> seat;
+    private Integer numberOfSeats;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id")
     private Booking booking;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "seat_id")
-    private List<Seat> seat;
-    private Integer numberOfSeats;
-
 }

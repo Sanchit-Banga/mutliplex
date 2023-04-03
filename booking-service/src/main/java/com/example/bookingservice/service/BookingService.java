@@ -1,8 +1,8 @@
 package com.example.bookingservice.service;
 
+import com.example.bookingservice.dto.BookingDetailsDto;
 import com.example.bookingservice.dto.BookingDto;
 import com.example.bookingservice.dto.BookingRequestDto;
-import com.example.bookingservice.exceptions.AlreadyPresentException;
 import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.exceptions.ConstraintViolationException;
 import com.example.bookingservice.exceptions.NotFoundException;
@@ -15,10 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.awt.print.Book;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +24,7 @@ import java.util.Optional;
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final ShowRepository showRepository;
+    private final BookingDetailService bookingDetailService;
 
     public BookingDto getBookingById(Long id) {
         try {
@@ -53,13 +52,17 @@ public class BookingService {
             if (date.after(show.getToDate()) || date.before(show.getFromDate())) {
                 throw new BadRequestException("Date invalid");
             }
+            BookingDetailsDto bookingDetailsDto = booking.getBookingDetails();
             Booking book = Booking.builder()
                     .show(show)
-                    .bookedDate(booking.getBookedDate())
+                    .bookedDate(new Date())
                     .showDate(booking.getShowDate())
                     .build();
-            bookingRepository.save(book);
-            return "Booking added successfully";
+            Long bookingDetailId = bookingDetailService.addBookingDetail(bookingDetailsDto);
+            Booking booking1 = bookingRepository.saveAndFlush(book);
+            bookingDetailService.setBookingInBookingDetail(booking1, bookingDetailId);
+            log.info("Booking object: {}", booking1);
+            return booking1.getId().toString();
         } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException("Invalid input");
         } catch (MethodArgumentTypeMismatchException e) {

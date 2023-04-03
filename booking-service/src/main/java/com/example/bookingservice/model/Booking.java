@@ -2,11 +2,9 @@ package com.example.bookingservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -26,7 +24,6 @@ public class Booking {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date bookedDate;
-
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date showDate;

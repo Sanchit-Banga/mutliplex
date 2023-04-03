@@ -4,6 +4,7 @@ import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.model.Hall;
 import com.example.bookingservice.model.Seat;
 import com.example.bookingservice.repository.HallRepository;
+import com.example.bookingservice.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeatService {
     private final HallRepository hallRepository;
+    private final SeatRepository seatRepository;
 
     public int getAvailableSeats(Long id) {
         try {
@@ -39,4 +41,24 @@ public class SeatService {
             throw new BadRequestException("No such hall found");
         }
     }
+
+    public Seat getSeatBySeatNumber(int seatNumber) {
+        try {
+            return seatRepository.getSeatBySeatNumber(seatNumber);
+        } catch (Exception e) {
+            throw new BadRequestException("No such seat found");
+        }
+    }
+
+    public void updateIsBooked(Long id, boolean isBooked) {
+        try {
+            Seat seat = seatRepository.findById(id).orElseThrow(() -> new BadRequestException("No such seat found"));
+            seat.setIsBooked(isBooked);
+            seatRepository.save(seat);
+        } catch (Exception e) {
+            throw new BadRequestException("No such seat found");
+        }
+    }
+
+
 }

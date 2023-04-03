@@ -1,20 +1,27 @@
 package com.example.bookingservice.service;
 
+import com.example.bookingservice.dto.BookingDetailsDto;
+import com.example.bookingservice.dto.SeatDto;
 import com.example.bookingservice.exceptions.BadRequestException;
+import com.example.bookingservice.model.Booking;
 import com.example.bookingservice.model.BookingDetail;
 import com.example.bookingservice.model.Seat;
 import com.example.bookingservice.repository.BookingDetailRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class BookingDetailService {
     private final BookingDetailRepository bookingDetailRepository;
+    private final SeatService seatService;
 
     public List<BookingDetail> getAllBookingDetails() {
         try {
@@ -24,20 +31,41 @@ public class BookingDetailService {
         }
     }
 
-    public String addBookingDetail(BookingDetail bookingDetail) {
+    public Long addBookingDetail(BookingDetailsDto bookingDetailsDto) {
         try {
-            if (bookingDetail.getNumberOfSeats() <= 0)
+            if (bookingDetailsDto.getNumberOfSeats() <= 0)
                 throw new BadRequestException("Number of seats cannot be less than or equal to 0");
-            bookingDetail.getSeat().forEach(seat -> {
-                if (seat.getIsBooked()) {
-                    throw new BadRequestException("Seat " + seat.getId().toString() + " is already booked");
+            List<SeatDto> seatDto = bookingDetailsDto.getSeat();
+            log.info("SeatDto: {}", seatDto);
+            List<Seat> seats = new ArrayList<>();
+            for (SeatDto seat : seatDto) {
+                Seat seatBySeatNumber = seatService.getSeatBySeatNumber(seat.getSeatNumber());
+                log.info("Seat by seat number: {}", seatBySeatNumber);
+                if (Boolean.TRUE.equals(seatBySeatNumber.getIsBooked())) {
+                    throw new BadRequestException("Seat " + seatBySeatNumber.getId().toString() + " is already booked");
                 }
-            });
-            bookingDetailRepository.save(bookingDetail);
-            return "Booking detail added successfully";
+                seats.add(seatBySeatNumber);
+                seatService.updateIsBooked(seatBySeatNumber.getId(), true);
+            }
+            log.info("Seats: {}", seats);
+            BookingDetail bookingDetail = BookingDetail.builder()
+                    .seat(seats)
+                    .numberOfSeats(bookingDetailsDto.getNumberOfSeats())
+                    .build();
+            BookingDetail bd = bookingDetailRepository.saveAndFlush(bookingDetail);
+            return bd.getId();
         } catch (Exception e) {
+            log.error("Error while adding booking detail: {}", e.getMessage());
             throw new BadRequestException("Error while adding booking detail");
         }
+    }
+
+    public void setBookingInBookingDetail(Booking booking, Long bookingDetailId) {
+        BookingDetail bookingDetail = bookingDetailRepository.findById(bookingDetailId)
+                .orElseThrow(()
+                        -> new BadRequestException("Booking detail not found"));
+        bookingDetail.setBooking(booking);
+        bookingDetailRepository.save(bookingDetail);
     }
 
     public BookingDetail getById(Long id) {
