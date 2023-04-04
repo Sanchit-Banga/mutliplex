@@ -1,7 +1,6 @@
 package com.example.userservice.dto;
 
 
-import com.example.userservice.model.Hall;
 import com.example.userservice.model.Movie;
 import lombok.*;
 

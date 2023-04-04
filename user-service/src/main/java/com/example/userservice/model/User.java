@@ -22,7 +22,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
     @NotNull
     @Size(max = 100)
     private String username;

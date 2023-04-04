@@ -1,6 +1,5 @@
 package com.example.bookingservice.controller;
 
-import com.example.bookingservice.dto.BookingDto;
 import com.example.bookingservice.dto.BookingRequestDto;
 import com.example.bookingservice.dto.BookingResponseDto;
 import com.example.bookingservice.service.BookingService;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

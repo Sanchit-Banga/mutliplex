@@ -30,8 +30,6 @@ public class UserService {
     @Autowired
     private HttpServletRequest request;
 
-//    private final EmailSenderService emailSenderService;
-
     public User registerUser(User userRequest) {
         try {
             if (userRepository.findByEmail(userRequest.getEmail()) != null) {
@@ -71,6 +69,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("User not found")
+        );
+    }
+
     public String updateUser(User user, Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
@@ -98,9 +102,7 @@ public class UserService {
                     .bodyToMono(Map.class)
                     .block();
             long userId = Long.parseLong(request.getAttribute("userId").toString());
-            User user = userRepository.findById(userId).orElseThrow(
-                    () -> new NotFoundException("User not found")
-            );
+            User user = getUserById(userId);
             Set<String> bookingId = user.getBookingId();
             if (bookingId == null) {
                 bookingId = new HashSet<>();
@@ -116,6 +118,24 @@ public class UserService {
     }
 
     public List<BookingResponseDto> getAllBookings() {
-        return Collections.emptyList();
+        long userId = Long.parseLong(request.getAttribute("userId").toString());
+        Set<String> bookingIds = getUserById(userId).getBookingId();
+        if (bookingIds == null) {
+            return Collections.emptyList();
+        }
+        List<BookingResponseDto> bookingResponseDtos = new ArrayList<>();
+        for (String bookingId : bookingIds) {
+            bookingResponseDtos.add(getBookingById(bookingId));
+        }
+        return bookingResponseDtos;
+    }
+
+    public BookingResponseDto getBookingById(String bookingId) {
+        return webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8089/booking/get/" + bookingId)
+                .retrieve()
+                .bodyToMono(BookingResponseDto.class)
+                .block();
     }
 }

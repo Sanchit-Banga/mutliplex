@@ -1,7 +1,6 @@
 package com.example.bookingservice.service;
 
 import com.example.bookingservice.dto.BookingDetailsDto;
-import com.example.bookingservice.dto.SeatDto;
 import com.example.bookingservice.dto.SeatRequestDto;
 import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.model.Booking;
