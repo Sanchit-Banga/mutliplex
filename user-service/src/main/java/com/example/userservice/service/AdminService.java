@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service
@@ -20,7 +21,11 @@ public class AdminService {
     public List<MovieDtoResponse> getAllMovies() {
         List<MovieDtoResponse> response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/movie/get").retrieve().bodyToFlux(MovieDtoResponse.class).collectList().block();
+            response = webClientBuilder.build().get().uri("http://localhost:8089/movie/get")
+                    .retrieve()
+                    .bodyToFlux(MovieDtoResponse.class)
+                    .collectList()
+                    .block();
             log.info("Response from '/api/v1/admin/movie/get': {}", response);
         } catch (Exception e) {
             log.error("Error while getting all movies: {}", e.getMessage());
@@ -32,11 +37,16 @@ public class AdminService {
     public MovieDtoResponse getMovieById(Long id) {
         MovieDtoResponse response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/movie/get/" + id).retrieve().bodyToMono(MovieDtoResponse.class).block();
+            response = webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8089/movie/get/" + id)
+                    .retrieve()
+                    .bodyToMono(MovieDtoResponse.class)
+                    .block();
             log.info("Response from '/api/v1/admin/movie/get/{id}': {}", response);
         } catch (Exception e) {
             log.error("Error while getting movie by id: {}", e.getMessage());
-            return new MovieDtoResponse(null, "Not Found");
+            return new MovieDtoResponse();
         }
         return response;
     }
@@ -44,55 +54,82 @@ public class AdminService {
     public MovieDtoResponse getMovieByName(String name) {
         MovieDtoResponse response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/movie/get/" + name).retrieve().bodyToMono(MovieDtoResponse.class).block();
+            response = webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8089/movie/get/" + name)
+                    .retrieve()
+                    .bodyToMono(MovieDtoResponse.class)
+                    .block();
             log.info("Response from '/api/v1/admin/movie/getByName/{name}': {}", response);
         } catch (Exception e) {
             log.error("Error while getting movie by name: {}", e.getMessage());
-            return new MovieDtoResponse(null, "Not Found");
+            return new MovieDtoResponse();
         }
         return response;
     }
 
     public String addMovie(MovieDtoResponse moviesDto) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().post().uri("http://localhost:8089/movie/add").bodyValue(moviesDto).retrieve().bodyToMono(String.class).block();
-            log.info("Response from '/api/v1/admin/movie/add': {}", response);
+            response = webClientBuilder.build()
+                    .post()
+                    .uri("http://localhost:8089/movie/add")
+                    .bodyValue(moviesDto)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            log.info("Response from '/api/v1/admin/movie/add': {}", response.get("message"));
         } catch (Exception e) {
             log.error("Error while adding movie: {}", e.getMessage());
             return "Movie already exists";
         }
-        return response;
+        return (String) response.get("message");
     }
 
     public String updateMovie(MovieDtoRequest moviesDtoRequest, Long id) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().put().uri("http://localhost:8089/movie/update/" + id).bodyValue(moviesDtoRequest).retrieve().bodyToMono(String.class).block();
+            response = webClientBuilder.build()
+                    .put()
+                    .uri("http://localhost:8089/movie/update/" + id)
+                    .bodyValue(moviesDtoRequest).retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
             log.info("Response from '/api/v1/admin/movie/update/{id}': {}", response);
         } catch (Exception e) {
             log.error("Error while updating movie: {}", e.getMessage());
             return "Movie does not exist";
         }
-        return response;
+        return (String) response.get("message");
     }
 
     public String deleteMovie(Long id) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().delete().uri("http://localhost:8089/movie/delete/" + id).retrieve().bodyToMono(String.class).block();
+            response = webClientBuilder.build()
+                    .delete()
+                    .uri("http://localhost:8089/movie/delete/" + id)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
             log.info("Response from '/api/v1/admin/movie/delete/{id}': {}", response);
         } catch (Exception e) {
             log.error("Error while deleting movie: {}", e.getMessage());
             return "Movie does not exist";
         }
-        return response;
+        return response.get("message").toString();
     }
 
     public List<HallDtoResponse> getAllHalls() {
         List<HallDtoResponse> response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/hall/get").retrieve().bodyToFlux(HallDtoResponse.class).collectList().block();
+            response = webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8089/hall/get")
+                    .retrieve()
+                    .bodyToFlux(HallDtoResponse.class)
+                    .collectList()
+                    .block();
             log.info("Response from '/api/v1/admin/hall/get': {}", response);
         } catch (Exception e) {
             log.error("Error while getting all halls: {}", e.getMessage());
@@ -105,7 +142,11 @@ public class AdminService {
     public HallDtoResponse getHallById(Long id) {
         HallDtoResponse response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/hall/get/" + id).retrieve().bodyToMono(HallDtoResponse.class).block();
+            response = webClientBuilder.build().get()
+                    .uri("http://localhost:8089/hall/get/" + id)
+                    .retrieve()
+                    .bodyToMono(HallDtoResponse.class)
+                    .block();
             log.info("Response from '/api/v1/admin/hall/get/{id}': {}", response);
         } catch (Exception e) {
             log.error("Error while getting hall by id: {}", e.getMessage());
@@ -115,45 +156,67 @@ public class AdminService {
     }
 
     public String addHall(HallDtoRequest hall) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().post().uri("http://localhost:8089/hall/add").bodyValue(hall).retrieve().bodyToMono(String.class).block();
-            log.info("Response from '/api/v1/admin/hall/add': {}", response);
+            response = webClientBuilder
+                    .build()
+                    .post()
+                    .uri("http://localhost:8089/hall/add")
+                    .bodyValue(hall).retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            log.info("Response from '/api/v1/admin/hall/add': {}", response.get("message"));
         } catch (Exception e) {
             log.error("Error while adding hall: {}", e.getMessage());
             return "Hall already exists";
         }
-        return response;
+        return response.get("message").toString();
     }
 
     public String deleteHall(Long id) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().delete().uri("http://localhost:8089/hall/delete/" + id).retrieve().bodyToMono(String.class).block();
-            log.info("Response from '/api/v1/admin/hall/delete/{id}': {}", response);
+            response = webClientBuilder.build()
+                    .delete()
+                    .uri("http://localhost:8089/hall/delete/" + id)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            log.info("Response from '/api/v1/admin/hall/delete/{id}': {}", response.get("message"));
         } catch (Exception e) {
             log.error("Error while deleting hall: {}", e.getMessage());
             return "Hall does not exist";
         }
-        return response;
+        return response.get("message").toString();
     }
 
     public String addShow(ShowRequestDto show) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().post().uri("http://localhost:8089/show/add").bodyValue(show).retrieve().bodyToMono(String.class).block();
-            log.info("Response from '/api/v1/admin/show/add': {}", response);
+            response = webClientBuilder.build()
+                    .post()
+                    .uri("http://localhost:8089/show/add")
+                    .bodyValue(show).retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            log.info("Response from '/api/v1/admin/show/add': {}", response.get("message"));
         } catch (Exception e) {
             log.error("Error while adding show: {}", e.getMessage());
             return "Show already exists";
         }
-        return response;
+        return response.get("message").toString();
     }
 
     public List<ShowResponseDto> getAllShows() {
         List<ShowResponseDto> response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/show/get").retrieve().bodyToFlux(ShowResponseDto.class).collectList().block();
+            response = webClientBuilder
+                    .build()
+                    .get()
+                    .uri("http://localhost:8089/show/get")
+                    .retrieve().bodyToFlux(ShowResponseDto.class)
+                    .collectList()
+                    .block();
             log.info("Response from '/api/v1/admin/show/get': {}", response);
         } catch (Exception e) {
             log.error("Error while getting all shows: {}", e.getMessage());
@@ -165,7 +228,12 @@ public class AdminService {
     public ShowResponseDto getShowById(Long id) {
         ShowResponseDto response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/show/get/" + id).retrieve().bodyToMono(ShowResponseDto.class).block();
+            response = webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8089/show/get/" + id)
+                    .retrieve()
+                    .bodyToMono(ShowResponseDto.class)
+                    .block();
             log.info("Response from '/api/v1/admin/show/get/{id}': {}", response);
         } catch (Exception e) {
             log.error("Error while getting show by id: {}", e.getMessage());
@@ -175,26 +243,39 @@ public class AdminService {
     }
 
     public String deleteShow(Long id) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().delete().uri("http://localhost:8089/show/delete/" + id).retrieve().bodyToMono(String.class).block();
-            log.info("Response from '/api/v1/admin/show/delete/{id}': {}", response);
+            response = webClientBuilder
+                    .build()
+                    .delete()
+                    .uri("http://localhost:8089/show/delete/" + id)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            log.info("Response from '/api/v1/admin/show/delete/{id}': {}", response.get("message"));
         } catch (Exception e) {
             log.error("Error while deleting show: {}", e.getMessage());
             return "Show does not exist";
         }
-        return response;
+        return response.get("message").toString();
     }
 
     public String updateShow(ShowRequestDto show, Long id) {
-        String response;
+        Map response;
         try {
-            response = webClientBuilder.build().put().uri("http://localhost:8089/show/update/" + id).bodyValue(show).retrieve().bodyToMono(String.class).block();
-            log.info("Response from '/api/v1/admin/show/update/{id}': {}", response);
+            response = webClientBuilder
+                    .build()
+                    .put()
+                    .uri("http://localhost:8089/show/update/" + id)
+                    .bodyValue(show)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            log.info("Response from '/api/v1/admin/show/update/{id}': {}", response.get("message"));
         } catch (Exception e) {
             log.error("Error while updating show: {}", e.getMessage());
             return "Show does not exist";
         }
-        return response;
+        return response.get("message").toString();
     }
 }

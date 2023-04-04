@@ -2,6 +2,7 @@ package com.example.bookingservice.controller;
 
 import com.example.bookingservice.dto.BookingDto;
 import com.example.bookingservice.dto.BookingRequestDto;
+import com.example.bookingservice.dto.BookingResponseDto;
 import com.example.bookingservice.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -18,14 +19,10 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<BookingDto> getBookingById(@PathVariable("id") Long id) {
+    public ResponseEntity<BookingResponseDto> getBookingById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(bookingService.getBookingById(id));
     }
 
-    @GetMapping("/get/all")
-    public ResponseEntity<List<BookingDto>> getBookingAll() {
-        return ResponseEntity.ok(bookingService.getAllBookings());
-    }
 
     @PostMapping("/add")
     public ResponseEntity<Map<String, String>> addBooking(@RequestBody BookingRequestDto booking) {

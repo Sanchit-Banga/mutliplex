@@ -1,12 +1,12 @@
 package com.example.bookingservice.service;
 
-import com.example.bookingservice.dto.BookingDetailsDto;
-import com.example.bookingservice.dto.BookingDto;
-import com.example.bookingservice.dto.BookingRequestDto;
+import com.example.bookingservice.dto.*;
 import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.exceptions.ConstraintViolationException;
 import com.example.bookingservice.exceptions.NotFoundException;
 import com.example.bookingservice.model.Booking;
+import com.example.bookingservice.model.Hall;
+import com.example.bookingservice.model.Seat;
 import com.example.bookingservice.model.Show;
 import com.example.bookingservice.repository.BookingRepository;
 import com.example.bookingservice.repository.ShowRepository;
@@ -25,14 +25,46 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final ShowRepository showRepository;
     private final BookingDetailService bookingDetailService;
+    private final SeatService seatService;
 
-    public BookingDto getBookingById(Long id) {
+    public BookingResponseDto getBookingById(Long id) {
         try {
             Booking booking = bookingRepository.findById(id).orElseThrow(() -> new NotFoundException("Booking not found"));
-            return convertBookingToDto(booking);
+            List<Seat> bookedSeats = bookingDetailService.getBookingDetailById(booking.getId()).getSeat();
+            List<SeatResponseDto> seats = bookedSeats.stream().map(seatService::toSeatResponseDto).toList();
+            double totalPrice = 0;
+            for (Seat seat : bookedSeats) {
+                totalPrice += seat.getPrice();
+            }
+            Show show = booking.getShow();
+            Hall hall = show.getHall();
+            hall.setShow(null);
+            hall.setSeats(null);
+            ShowResponseDto showResponseDto = convertShowToDto(show, hall);
+            return convertBookingToDto(booking, seats, totalPrice, showResponseDto);
         } catch (MethodArgumentTypeMismatchException e) {
             throw new BadRequestException("Input data type incorrect");
         }
+    }
+
+    public BookingResponseDto convertBookingToDto(Booking booking, List<SeatResponseDto> seats, double totalPrice, ShowResponseDto show) {
+        return BookingResponseDto.builder()
+                .bookingId(booking.getId())
+                .bookedDate(booking.getBookedDate())
+                .showDate(booking.getShowDate())
+                .seats(seats)
+                .show(show)
+                .totalPrice(totalPrice)
+                .build();
+    }
+
+    public ShowResponseDto convertShowToDto(Show show, Hall hall) {
+        return ShowResponseDto.builder()
+                .id(show.getId())
+                .hall(hall)
+                .movie(show.getMovie())
+                .slotNumber(show.getSlotNumber())
+                .build();
     }
 
     public List<BookingDto> getAllBookings() {

@@ -1,6 +1,7 @@
 package com.example.userservice.service;
 
 import com.example.userservice.dto.BookingRequestDto;
+import com.example.userservice.dto.BookingResponseDto;
 import com.example.userservice.exceptions.AuthException;
 import com.example.userservice.exceptions.NotFoundException;
 import com.example.userservice.model.User;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final WebClient.Builder webClientBuilder;
+    @Autowired
     private HttpServletRequest request;
 
 //    private final EmailSenderService emailSenderService;
@@ -43,7 +46,6 @@ public class UserService {
                     .password(hashedPassword)
                     .build();
             userRepository.save(user);
-//            emailSenderService.sendEmail(user.getEmail(), "Welcome to Movie Booking App", "You have successfully registered");
             return user;
         } catch (EmptyResultDataAccessException e) {
             throw new AuthException("Invalid details. Failed to register");
@@ -86,28 +88,34 @@ public class UserService {
     }
 
     public String addBooking(BookingRequestDto booking) {
-        Long response;
+        Map response;
         try {
             response = webClientBuilder.build()
                     .post()
                     .uri("http://localhost:8089/booking/add")
                     .bodyValue(booking)
                     .retrieve()
-                    .bodyToMono(Long.class)
+                    .bodyToMono(Map.class)
                     .block();
             long userId = Long.parseLong(request.getAttribute("userId").toString());
             User user = userRepository.findById(userId).orElseThrow(
                     () -> new NotFoundException("User not found")
             );
             Set<String> bookingId = user.getBookingId();
-            bookingId.add(response.toString());
+            if (bookingId == null) {
+                bookingId = new HashSet<>();
+            }
+            bookingId.add(response.get("message").toString());
             user.setBookingId(bookingId);
             userRepository.save(user);
-            System.out.println(user);
         } catch (Exception e) {
-            log.error("Error at adding booking", e);
+            log.error("Error at adding booking {}", e.getMessage());
             throw new AuthException("Something went wrong");
         }
-        return "Fuck OFf";
+        return response.get("message").toString();
+    }
+
+    public List<BookingResponseDto> getAllBookings() {
+        return Collections.emptyList();
     }
 }

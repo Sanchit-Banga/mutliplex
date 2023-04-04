@@ -2,6 +2,7 @@ package com.example.bookingservice.service;
 
 import com.example.bookingservice.dto.BookingDetailsDto;
 import com.example.bookingservice.dto.SeatDto;
+import com.example.bookingservice.dto.SeatRequestDto;
 import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.model.Booking;
 import com.example.bookingservice.model.BookingDetail;
@@ -31,23 +32,28 @@ public class BookingDetailService {
         }
     }
 
+    public BookingDetail getBookingDetailById(Long id) {
+        try {
+            return bookingDetailRepository.findById(id).orElseThrow(() -> new BadRequestException("Booking detail not found"));
+        } catch (Exception e) {
+            throw new BadRequestException("Error while fetching booking detail");
+        }
+    }
+
     public Long addBookingDetail(BookingDetailsDto bookingDetailsDto) {
         try {
             if (bookingDetailsDto.getNumberOfSeats() <= 0)
                 throw new BadRequestException("Number of seats cannot be less than or equal to 0");
-            List<SeatDto> seatDto = bookingDetailsDto.getSeat();
-            log.info("SeatDto: {}", seatDto);
+            List<SeatRequestDto> seatDto = bookingDetailsDto.getSeat();
             List<Seat> seats = new ArrayList<>();
-            for (SeatDto seat : seatDto) {
+            for (SeatRequestDto seat : seatDto) {
                 Seat seatBySeatNumber = seatService.getSeatBySeatNumber(seat.getSeatNumber());
-                log.info("Seat by seat number: {}", seatBySeatNumber);
                 if (Boolean.TRUE.equals(seatBySeatNumber.getIsBooked())) {
                     throw new BadRequestException("Seat " + seatBySeatNumber.getId().toString() + " is already booked");
                 }
                 seats.add(seatBySeatNumber);
                 seatService.updateIsBooked(seatBySeatNumber.getId(), true);
             }
-            log.info("Seats: {}", seats);
             BookingDetail bookingDetail = BookingDetail.builder()
                     .seat(seats)
                     .numberOfSeats(bookingDetailsDto.getNumberOfSeats())

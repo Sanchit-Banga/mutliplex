@@ -18,8 +18,10 @@ public class BookingDetail {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "seat_id")
+    @JoinColumn(name = "booking_detail_id")
     private List<Seat> seat;
     private Integer numberOfSeats;
-
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 }

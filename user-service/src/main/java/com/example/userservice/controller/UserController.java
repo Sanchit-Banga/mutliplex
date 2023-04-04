@@ -1,6 +1,7 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.*;
+import com.example.userservice.model.Booking;
 import com.example.userservice.model.User;
 import com.example.userservice.service.AdminService;
 import com.example.userservice.service.UserService;
@@ -73,7 +74,13 @@ public class UserController {
 
     @PostMapping("/booking/add")
     public ResponseEntity<Map<String, String>> addBooking(@RequestBody BookingRequestDto booking) {
-        Map<String, String> map = Map.of("message", userService.addBooking(booking));
+        Map<String, String> map = Map.of("booking id", userService.addBooking(booking));
         return new ResponseEntity<>(map, HttpStatusCode.valueOf(201));
+    }
+
+    @GetMapping("/booking/get")
+    public ResponseEntity<Map<String, List<BookingResponseDto>>> getAllBookings() {
+        Map<String, List<BookingResponseDto>> map = Map.of("bookings", userService.getAllBookings());
+        return new ResponseEntity<>(map, HttpStatusCode.valueOf(200));
     }
 }

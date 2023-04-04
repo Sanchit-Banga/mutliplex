@@ -1,5 +1,6 @@
 package com.example.bookingservice.dto;
 
+
 import com.example.bookingservice.model.Show;
 import com.example.bookingservice.utils.HallType;
 import lombok.*;

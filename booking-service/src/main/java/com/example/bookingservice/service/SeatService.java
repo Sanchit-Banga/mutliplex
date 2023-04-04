@@ -1,5 +1,6 @@
 package com.example.bookingservice.service;
 
+import com.example.bookingservice.dto.SeatResponseDto;
 import com.example.bookingservice.exceptions.BadRequestException;
 import com.example.bookingservice.model.Hall;
 import com.example.bookingservice.model.Seat;
@@ -60,5 +61,11 @@ public class SeatService {
         }
     }
 
-
+    public SeatResponseDto toSeatResponseDto(Seat seat) {
+        return SeatResponseDto.builder()
+                .seatNumber(seat.getSeatNumber())
+                .seatType(seat.getSeatType())
+                .price(seat.getPrice())
+                .build();
+    }
 }

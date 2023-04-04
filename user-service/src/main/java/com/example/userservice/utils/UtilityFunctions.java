@@ -22,10 +22,6 @@ public class UtilityFunctions {
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
                 .claim("userId", user.getUserId())
-                .claim("email", user.getEmail())
-                .claim("username", user.getUsername())
-                .claim("phoneNumber", user.getPhoneNumber())
-                .claim("bookingId", user.getBookingId())
                 .claim("role", user.getRole()).compact();
         Map<String, String> map = new HashMap<>();
         map.put("token", token);
