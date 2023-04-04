@@ -21,7 +21,7 @@ public class AdminService {
     public List<MovieDtoResponse> getAllMovies() {
         List<MovieDtoResponse> response;
         try {
-            response = webClientBuilder.build().get().uri("http://localhost:8089/movie/get")
+            response = webClientBuilder.build().get().uri("lb://booking-service/movie/get")
                     .retrieve()
                     .bodyToFlux(MovieDtoResponse.class)
                     .collectList()
@@ -39,7 +39,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8089/movie/get/" + id)
+                    .uri("lb://booking-service/movie/get/" + id)
                     .retrieve()
                     .bodyToMono(MovieDtoResponse.class)
                     .block();
@@ -56,7 +56,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8089/movie/get/" + name)
+                    .uri("lb://booking-service/movie/get/" + name)
                     .retrieve()
                     .bodyToMono(MovieDtoResponse.class)
                     .block();
@@ -73,11 +73,12 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .post()
-                    .uri("http://localhost:8089/movie/add")
+                    .uri("lb://booking-service/movie/add")
                     .bodyValue(moviesDto)
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
+            System.out.println(response);
             log.info("Response from '/api/v1/admin/movie/add': {}", response.get("message"));
         } catch (Exception e) {
             log.error("Error while adding movie: {}", e.getMessage());
@@ -91,7 +92,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .put()
-                    .uri("http://localhost:8089/movie/update/" + id)
+                    .uri("lb://booking-service/movie/update/" + id)
                     .bodyValue(moviesDtoRequest).retrieve()
                     .bodyToMono(Map.class)
                     .block();
@@ -108,7 +109,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .delete()
-                    .uri("http://localhost:8089/movie/delete/" + id)
+                    .uri("lb://booking-service/movie/delete/" + id)
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
@@ -125,7 +126,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8089/hall/get")
+                    .uri("lb://booking-service/hall/get")
                     .retrieve()
                     .bodyToFlux(HallDtoResponse.class)
                     .collectList()
@@ -143,7 +144,7 @@ public class AdminService {
         HallDtoResponse response;
         try {
             response = webClientBuilder.build().get()
-                    .uri("http://localhost:8089/hall/get/" + id)
+                    .uri("lb://booking-service/hall/get/" + id)
                     .retrieve()
                     .bodyToMono(HallDtoResponse.class)
                     .block();
@@ -161,7 +162,7 @@ public class AdminService {
             response = webClientBuilder
                     .build()
                     .post()
-                    .uri("http://localhost:8089/hall/add")
+                    .uri("lb://booking-service/hall/add")
                     .bodyValue(hall).retrieve()
                     .bodyToMono(Map.class)
                     .block();
@@ -178,7 +179,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .delete()
-                    .uri("http://localhost:8089/hall/delete/" + id)
+                    .uri("lb://booking-service/hall/delete/" + id)
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
@@ -195,7 +196,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .post()
-                    .uri("http://localhost:8089/show/add")
+                    .uri("lb://booking-service/show/add")
                     .bodyValue(show).retrieve()
                     .bodyToMono(Map.class)
                     .block();
@@ -213,7 +214,7 @@ public class AdminService {
             response = webClientBuilder
                     .build()
                     .get()
-                    .uri("http://localhost:8089/show/get")
+                    .uri("lb://booking-service/show/get")
                     .retrieve().bodyToFlux(ShowResponseDto.class)
                     .collectList()
                     .block();
@@ -230,7 +231,7 @@ public class AdminService {
         try {
             response = webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8089/show/get/" + id)
+                    .uri("lb://booking-service/show/get/" + id)
                     .retrieve()
                     .bodyToMono(ShowResponseDto.class)
                     .block();
@@ -248,7 +249,7 @@ public class AdminService {
             response = webClientBuilder
                     .build()
                     .delete()
-                    .uri("http://localhost:8089/show/delete/" + id)
+                    .uri("lb://booking-service/show/delete/" + id)
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
@@ -266,7 +267,7 @@ public class AdminService {
             response = webClientBuilder
                     .build()
                     .put()
-                    .uri("http://localhost:8089/show/update/" + id)
+                    .uri("lb://booking-service/show/update/" + id)
                     .bodyValue(show)
                     .retrieve()
                     .bodyToMono(Map.class)

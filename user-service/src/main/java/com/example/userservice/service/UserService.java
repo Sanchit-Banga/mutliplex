@@ -96,7 +96,7 @@ public class UserService {
         try {
             response = webClientBuilder.build()
                     .post()
-                    .uri("http://localhost:8089/booking/add")
+                    .uri("lb://booking-service/booking/add")
                     .bodyValue(booking)
                     .retrieve()
                     .bodyToMono(Map.class)
@@ -133,7 +133,7 @@ public class UserService {
     public BookingResponseDto getBookingById(String bookingId) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8089/booking/get/" + bookingId)
+                .uri("lb://booking-service/booking/get/" + bookingId)
                 .retrieve()
                 .bodyToMono(BookingResponseDto.class)
                 .block();
