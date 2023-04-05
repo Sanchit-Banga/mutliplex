@@ -1,7 +1,6 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.*;
-import com.example.userservice.model.Booking;
 import com.example.userservice.model.User;
 import com.example.userservice.service.AdminService;
 import com.example.userservice.service.UserService;

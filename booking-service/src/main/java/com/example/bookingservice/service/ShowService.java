@@ -11,6 +11,7 @@ import com.example.bookingservice.model.Show;
 import com.example.bookingservice.repository.HallRepository;
 import com.example.bookingservice.repository.MovieRepository;
 import com.example.bookingservice.repository.ShowRepository;
+import com.example.bookingservice.utils.MapToDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,18 +54,9 @@ public class ShowService {
             if (hallSlotValidate(showRequestDto.getHallId(), showRequestDto.getSlotNumber(), showRequestDto.getFromDate(), showRequestDto.getToDate())) {
                 return "Show already present at this slot no";
             }
-
             Hall hall = hallRepository.findById(showRequestDto.getHallId()).orElseThrow(() -> new BadRequestException(NOHALL));
             Movie movie = movieRepository.findById(showRequestDto.getMovieId()).orElseThrow(() -> new BadRequestException("No movie found"));
-
-            Show show = Show.builder()
-                    .movie(movie)
-                    .fromDate(showRequestDto.getFromDate())
-                    .toDate(showRequestDto.getToDate())
-                    .hall(hall)
-                    .slotNumber(showRequestDto.getSlotNumber())
-                    .build();
-            showRepository.save(show);
+            showRepository.save(MapToDto.convertShowDtoToModel(showRequestDto, movie, hall));
         } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException("Wrong input");
         }
@@ -107,16 +99,11 @@ public class ShowService {
         return "Show updated successfully";
     }
 
-    private ShowResponseDto convertToDto(Show show) {
-        return ShowResponseDto.builder().id(show.getId()).toDate(show.getToDate()).fromDate(show.getFromDate()).slotNumber(show.getSlotNumber()).movie(show.getMovie()).hall(show.getHall()).build();
-    }
-
-
     public List<ShowResponseDto> getAllShows() {
         try {
             List<Show> allShows = showRepository.findAll();
             log.info("All Shows = {}", allShows);
-            return allShows.stream().map(this::convertToDto).toList();
+            return allShows.stream().map(MapToDto::convertToShowDto).toList();
         } catch (Exception e) {
             throw new BadRequestException(NOSHOW);
         }
@@ -126,7 +113,7 @@ public class ShowService {
         try {
             Show show = showRepository.findById(id).orElseThrow(() -> new BadRequestException(NOSHOW));
             log.info("Show =  {}", show);
-            return convertToDto(show);
+            return MapToDto.convertToShowDto(show);
         } catch (Exception e) {
             throw new BadRequestException(NOSHOW);
         }
@@ -137,7 +124,6 @@ public class ShowService {
         showRepository.deleteById(show.getId());
         return "Show deleted successfully";
     }
-
 
 
 }

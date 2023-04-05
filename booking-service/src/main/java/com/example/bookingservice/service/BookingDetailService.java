@@ -78,7 +78,7 @@ public class BookingDetailService {
                 .orElseThrow(()
                         -> new BadRequestException("Booking detail not found"));
     }
-
+// fucked up code
     public String deleteBookingDetail(Long id) {
         try {
             BookingDetail bookingDetail = bookingDetailRepository.findById(id)

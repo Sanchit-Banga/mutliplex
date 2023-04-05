@@ -10,6 +10,7 @@ import com.example.bookingservice.model.Seat;
 import com.example.bookingservice.model.Show;
 import com.example.bookingservice.repository.BookingRepository;
 import com.example.bookingservice.repository.ShowRepository;
+import com.example.bookingservice.utils.MapToDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,12 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final ShowRepository showRepository;
     private final BookingDetailService bookingDetailService;
-    private final SeatService seatService;
 
     public BookingResponseDto getBookingById(Long id) {
         try {
             Booking booking = bookingRepository.findById(id).orElseThrow(() -> new NotFoundException("Booking not found"));
             List<Seat> bookedSeats = bookingDetailService.getBookingDetailById(booking.getId()).getSeat();
-            List<SeatResponseDto> seats = bookedSeats.stream().map(seatService::toSeatResponseDto).toList();
+            List<SeatResponseDto> seats = bookedSeats.stream().map(MapToDto::toSeatResponseDto).toList();
             double totalPrice = 0;
             for (Seat seat : bookedSeats) {
                 totalPrice += seat.getPrice();
@@ -40,37 +40,17 @@ public class BookingService {
             Hall hall = show.getHall();
             hall.setShow(null);
             hall.setSeats(null);
-            ShowResponseDto showResponseDto = convertShowToDto(show, hall);
-            return convertBookingToDto(booking, seats, totalPrice, showResponseDto);
+            ShowResponseDto showResponseDto = MapToDto.convertShowToDto(show, hall);
+            return MapToDto.convertBookingToDto(booking, seats, totalPrice, showResponseDto);
         } catch (MethodArgumentTypeMismatchException e) {
             throw new BadRequestException("Input data type incorrect");
         }
     }
 
-    public BookingResponseDto convertBookingToDto(Booking booking, List<SeatResponseDto> seats, double totalPrice, ShowResponseDto show) {
-        return BookingResponseDto.builder()
-                .bookingId(booking.getId())
-                .bookedDate(booking.getBookedDate())
-                .showDate(booking.getShowDate())
-                .seats(seats)
-                .show(show)
-                .totalPrice(totalPrice)
-                .build();
-    }
-
-    public ShowResponseDto convertShowToDto(Show show, Hall hall) {
-        return ShowResponseDto.builder()
-                .id(show.getId())
-                .hall(hall)
-                .movie(show.getMovie())
-                .slotNumber(show.getSlotNumber())
-                .build();
-    }
-
     public List<BookingDto> getAllBookings() {
         try {
             List<Booking> bookings = bookingRepository.findAll();
-            return bookings.stream().map(this::convertBookingToDto).toList();
+            return bookings.stream().map(MapToDto::convertBookingToDto).toList();
         } catch (Exception e) {
             log.error("Error at getting all bookings", e);
             throw new BadRequestException("Something went wrong");
@@ -112,12 +92,5 @@ public class BookingService {
         }
     }
 
-    private BookingDto convertBookingToDto(Booking booking) {
-        return BookingDto.builder()
-                .id(booking.getId())
-                .bookedDate(booking.getBookedDate())
-                .showDate(booking.getShowDate())
-                .show(booking.getShow())
-                .build();
-    }
+
 }

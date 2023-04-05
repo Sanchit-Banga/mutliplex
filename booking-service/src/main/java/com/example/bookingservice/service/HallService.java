@@ -9,6 +9,7 @@ import com.example.bookingservice.model.Seat;
 import com.example.bookingservice.model.Show;
 import com.example.bookingservice.repository.HallRepository;
 import com.example.bookingservice.repository.ShowRepository;
+import com.example.bookingservice.utils.MapToDto;
 import com.example.bookingservice.utils.SeatType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class HallService {
         try {
             Hall hall = hallRepository.findById(id).orElseThrow(() -> new BadRequestException("No hall found"));
             log.info("Hall: {}", hall);
-            return convertToDto(hall);
+            return MapToDto.convertHallToDto(hall, getAllShowsInAHall(hall));
         } catch (Exception e) {
             throw new BadRequestException("No hall found");
         }
@@ -71,7 +72,7 @@ public class HallService {
         try {
             List<Hall> allHalls = hallRepository.findAll();
             log.info("All halls: {}", allHalls);
-            return allHalls.stream().map(this::convertToDto).toList();
+            return allHalls.stream().map(hall -> MapToDto.convertHallToDto(hall, getAllShowsInAHall(hall))).toList();
         } catch (Exception e) {
             throw new BadRequestException("No halls found");
         }
@@ -153,35 +154,15 @@ public class HallService {
             int platinumSeats = hall.getTotalCapacity() * 20 / 100;
             int goldSeats = hall.getTotalCapacity() * 30 / 100;
             if (i <= platinumSeats) {
-                s = seatBuilder(i, SeatType.PLATINUM, 200.0);
+                s = MapToDto.seatBuilder(i, SeatType.PLATINUM, 200.0);
             } else if (i <= platinumSeats + goldSeats) {
-                s = seatBuilder(i, SeatType.GOLD, 150.0);
+                s = MapToDto.seatBuilder(i, SeatType.GOLD, 150.0);
             } else {
-                s = seatBuilder(i, SeatType.SILVER, 100.0);
+                s = MapToDto.seatBuilder(i, SeatType.SILVER, 100.0);
             }
             seats.add(s);
         }
         hall.setSeats(seats);
     }
-
-    private HallDtoResponse convertToDto(Hall hall) {
-        return HallDtoResponse.builder()
-                .id(hall.getId())
-                .hallType(hall.getHallType())
-                .totalCapacity(hall.getTotalCapacity())
-                .shows(getAllShowsInAHall(hall))
-                .build();
-    }
-
-
-    private Seat seatBuilder(Integer seatNumber, SeatType seatType, Double price) {
-        return Seat.builder()
-                .seatNumber(seatNumber)
-                .seatType(seatType)
-                .price(price)
-                .isBooked(false)
-                .build();
-    }
-
 
 }
